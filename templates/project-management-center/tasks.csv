@@ -1,0 +1,2 @@
+task_id,project_id,title,goal,assignee,reviewer,priority,status,deliverable_location,acceptance_criteria,original_due_at,current_due_at,next_check_at,latest_deliverable_version,blocker,decision_owner,created_at,updated_at,closed_at,close_reason
+P-001-T-001,P-001,示例：整理访谈纪要,从 input.md 提取决定和行动项并保存指定文件,助手甲,项目负责人,中,待接单,docs/interview-notes.md,"决定与行动项分节；行动项含负责人和日期；不添加来源未提及的信息",2026-11-18 17:00,2026-11-18 17:00,2026-11-18 17:10,v1,,项目负责人,2026-11-13 09:00,2026-11-13 09:00,,

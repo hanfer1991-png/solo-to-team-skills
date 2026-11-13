@@ -1,0 +1,4 @@
+task_id,criterion_id,criterion,check_method,result,evidence_location,deliverable_version,reviewer,checked_at,notes
+P-001-T-001,C-01,决定与行动项分节,打开交付文件核对标题和内容,未核验,,v1,项目负责人,,
+P-001-T-001,C-02,行动项明确负责人和日期,逐条对照输入转写,未核验,,v1,项目负责人,,
+P-001-T-001,C-03,不添加来源未提及的信息,逐条核对转写原文,未核验,,v1,项目负责人,,

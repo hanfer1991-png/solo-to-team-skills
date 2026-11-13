@@ -1,0 +1,2 @@
+event_id,task_id,event_at,event_type,actor,previous_status,new_status,details,deliverable_location,deliverable_version,evidence_location,next_action,next_check_at,approved_by
+E-001,P-001-T-001,2026-11-13 09:00,待接单,项目负责人,,待接单,派工前已登记；等待执行人明确接单,docs/interview-notes.md,v1,,确认接单并开始执行,2026-11-13 10:00,
