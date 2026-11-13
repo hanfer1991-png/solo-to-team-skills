@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="飞书多维表格项目管理中心模板生成器：查看字段、复制表头、下载 CSV 模板。">
+<title>飞书项目管理中心 · 模板生成器</title>
+<style>
+:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f5f7fb;--blue:#315efb;--line:#e4e8f0;--muted:#667085;--panel:#fff;--green:#14804a}*{box-sizing:border-box}body{margin:0}header{background:#fff;border-bottom:1px solid var(--line);padding:22px max(20px,calc((100vw - 1120px)/2));display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}h1{font-size:22px;margin:0}header p{margin:6px 0 0;color:var(--muted);font-size:14px}.wrap{max-width:1120px;margin:0 auto;padding:20px}.notice{border:1px solid #f1d899;background:#fff9e9;border-radius:10px;padding:12px 14px;color:#684e08;font-size:13px;line-height:1.55}.hero{padding:18px 0 8px}.hero h2{margin:0 0 8px;font-size:20px}.hero p{margin:0;color:var(--muted);line-height:1.6}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.btn{border:1px solid #d8deea;border-radius:8px;background:#fff;color:#243047;padding:9px 12px;font:inherit;cursor:pointer}.btn:hover{border-color:#9aa8c3;background:#f8faff}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.primary:hover{background:#244ddd}.tabs{display:flex;gap:8px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:0;background:transparent;padding:11px 14px;color:#667085;font:inherit;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent}.tab.active{color:var(--blue);border-color:var(--blue);font-weight:650}.panel{display:none;background:var(--panel);border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:16px;overflow:auto}.panel.active{display:block}.panel h3{margin:0 0 12px;font-size:16px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:780px;font-size:13px}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid #edf0f5;vertical-align:top}th{background:#f8f9fc;color:#465268;font-weight:650;position:sticky;top:0}td:first-child{font-weight:600;white-space:nowrap}.type{display:inline-block;background:#eef2ff;color:#344cc4;border-radius:20px;padding:3px 8px;white-space:nowrap;font-size:12px}.section{margin-top:22px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.step{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}.step b{display:block;margin-bottom:6px}.step p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}.code{background:#101828;color:#e5e7eb;padding:14px;border-radius:9px;white-space:pre-wrap;overflow:auto;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}.small{color:var(--muted);font-size:12px;line-height:1.5}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#172033;color:#fff;padding:10px 14px;border-radius:9px;opacity:0;pointer-events:none;transition:opacity .2s}.toast.show{opacity:1}footer{max-width:1120px;margin:auto;padding:0 20px 24px;color:var(--muted);font-size:12px}@media(max-width:700px){.wrap{padding:14px}.steps{grid-template-columns:1fr}header{padding:16px 14px}h1{font-size:19px}}
+</style>
+</head>
+<body>
+<header><div><h1>飞书项目管理中心</h1><p>多维表格字段模板 · 派工 → 接单 → 收成果 → 核证 → 人工验收</p></div><button class="btn primary" id="downloadAll">下载全部 CSV 模板</button></header>
+<main class="wrap">
+<div class="notice"><strong>模板说明：</strong>此静态网页可查看字段结构、复制表头或下载 CSV 示例，帮助你在飞书多维表格中建表。它不会连接飞书或自动创建多维表、提醒、派工或验收。导入 CSV 后请按字段建议手动设置字段类型与单选选项。</div>
+<section class="hero"><h2>先下载，再导入飞书多维表格</h2><p>建议建立三张表：任务主表、事件流水、验收清单。CSV 文件使用 UTF-8 编码并包含一条示例数据；导入后可删除示例行。关联字段需在飞书内手动建立。</p></section>
+<div class="actions"><button class="btn primary" data-download="tasks">下载任务主表 CSV</button><button class="btn" data-download="events">下载事件流水 CSV</button><button class="btn" data-download="checks">下载验收清单 CSV</button><button class="btn" data-copy="tasks">复制任务主表表头</button><button class="btn" data-copy="events">复制事件流水表头</button><button class="btn" data-copy="checks">复制验收清单表头</button></div>
+<div class="tabs" role="tablist"><button class="tab active" role="tab" aria-selected="true" data-tab="tasks">任务主表</button><button class="tab" role="tab" aria-selected="false" data-tab="events">事件流水</button><button class="tab" role="tab" aria-selected="false" data-tab="checks">验收清单</button><button class="tab" role="tab" aria-selected="false" data-tab="views">视图与规则</button></div>
+<section class="panel active" id="panel-tasks" role="tabpanel"></section><section class="panel" id="panel-events" role="tabpanel"></section><section class="panel" id="panel-checks" role="tabpanel"></section><section class="panel" id="panel-views" role="tabpanel"></section>
+<section class="section"><h3>导入飞书的建议步骤</h3><div class="steps"><div class="step"><b>1. 下载 CSV</b><p>分别下载三张表的模板。示例记录用于展示格式，正式使用前替换或删除。</p></div><div class="step"><b>2. 导入为多维表格</b><p>在飞书多维表格中选择导入数据 / CSV，按页面提示上传文件并检查列分隔与中文显示。</p></div><div class="step"><b>3. 设置字段类型和视图</b><p>根据字段字典把文本、人员、日期、单选等类型设置好；建立关联字段和看板视图。</p></div></div></section>
+<section class="section"><h3>状态口径</h3><div class="code">待接单 → 执行中 → 待回收 → 待核验 → 已验收
+                                  └→ 退回待补 → 待核验
+
+关闭状态仅有：已验收、已取消。
+接单不代表成果已交；收到成果不代表验收通过。
+执行人提出的新时间不是批准改期；保留原始预计时间和变更事件。
+每个核验结论必须关联到成果版本与可复查证据。
+最终验收、取消及高影响操作由有权限的人决定。</div></section>
+</main><footer>本工具是静态字段模板生成器，不含飞书 API、账户权限、服务端存储或自动提醒。请勿在 CSV 中保存密码、密钥或不必要的敏感个人信息。</footer><div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const tables={
+ tasks:{name:'任务主表',filename:'feishu-tasks-template.csv',fields:[
+ ['任务名称','文本（主字段）','具体交付成果名称。'],['任务 ID','文本','唯一编号，例如 P-001-T-001。'],['所属项目','关联 / 单选','可先用单选；关联项目表时在飞书内设置。'],['任务目标','多行文本','说明做什么及预期结果。'],['执行人','人员 / 文本','负责完成工作的人或助手。'],['收件人 / 核验人','人员 / 文本','接收成果并核验的人。'],['状态','单选','待接单、执行中、待回收、待核验、退回待补、已验收、已取消。'],['优先级','单选','高、中、低。'],['交付位置','URL / 文本','文件路径或链接。'],['验收标准','多行文本','一行一个标准；详细证据放验收清单表。'],['原始预计交付','日期时间','最初承诺，创建后不覆盖。'],['当前批准交付','日期时间','有权限的人确认后的当前期限。'],['下次检查时间','日期时间','负责人下一次人工检查时间。'],['成果版本','文本','例如 v1、v2；验收关联到具体版本。'],['阻塞 / 风险','多行文本','描述事实、影响及需协助人。'],['决策负责人','人员 / 文本','有权批准改期、验收或取消的人。'],['关闭原因','多行文本','取消任务时必填。'],['关闭时间','日期时间','任务验收或取消时记录。']
+ ],sample:['整理访谈纪要','P-001-T-001','P-001','从转写中提炼决定和行动项，输出可审核纪要','助手甲','项目负责人','待接单','中','docs/interview-notes.md','决定与行动项分节；行动项含负责人和日期；不添加来源未提及的信息','2026-11-18 17:00','2026-11-18 17:00','2026-11-18 17:10','v1','无','项目负责人','','']},
+ events:{name:'事件流水',filename:'feishu-task-events-template.csv',fields:[
+ ['事件名称','文本（主字段）','例如已接单、续期、收到成果。'],['关联任务','关联 / 文本','建议关联任务主表；也可暂用任务 ID。'],['任务 ID','文本','对应任务的唯一编号。'],['发生时间','日期时间','实际发生时间。'],['事件类型','单选','接单、检查、续期、升级、收到成果、核验、退回、已验收、已取消、目标变更。'],['操作者','人员 / 文本','执行或记录该事件的人。'],['之前状态','单选 / 文本','事件发生前状态。'],['之后状态','单选 / 文本','事件发生后状态。'],['事实与说明','多行文本','记录实际事实、原因和影响。'],['成果位置与版本','URL / 文本','成果位置及版本号。'],['证据位置','URL / 文本','可复查的核验材料。'],['下一步','多行文本','下一步由谁做什么。'],['下次检查时间','日期时间','下一次人工检查时间。'],['改期批准人','人员 / 文本','有权限批准正式改期的人。']
+ ],sample:['已接单','P-001-T-001','P-001-T-001','2026-11-13 09:30','接单','助手甲','待接单','执行中','执行人已确认接单；成果尚未交付。','','','按约定完成并提交成果','2026-11-13 10:00','']},
+ checks:{name:'验收清单',filename:'feishu-acceptance-checklist-template.csv',fields:[
+ ['验收项','文本（主字段）','一项可观察、可判断的完成条件。'],['关联任务','关联 / 文本','关联任务主表中的对应任务。'],['任务 ID','文本','对应任务唯一编号。'],['核验方法','多行文本','说明如何检查或复算。'],['结果','单选','未核验、通过、未通过。'],['证据位置','URL / 文本','可定位到文件、链接或复算结果。'],['对应成果版本','文本','证据对应的成果版本，例如 v1。'],['核验人','人员 / 文本','实际核验的人。'],['核验时间','日期时间','实际核验时间。'],['备注','多行文本','缺项、偏差或复核范围。']
+ ],sample:['决定与行动项分节','P-001-T-001','P-001-T-001','打开交付文件核对标题和内容','未核验','docs/interview-notes.md','v1','项目负责人','','待文件交付后核验。']}
+};
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderTable(key){const t=tables[key];return `<h3>${t.name} · 字段字典</h3><div class="table-wrap"><table><thead><tr><th>字段名</th><th>建议类型</th><th>用途 / 规则</th></tr></thead><tbody>${t.fields.map(f=>`<tr><td>${esc(f[0])}</td><td><span class="type">${esc(f[1])}</span></td><td>${esc(f[2])}</td></tr>`).join('')}</tbody></table></div><p class="small">CSV 表头顺序与此表一致。字段类型是建表建议，导入后请在飞书多维表格中确认或调整。</p>`}
+for(const key of Object.keys(tables))document.getElementById('panel-'+key).innerHTML=renderTable(key);
+document.getElementById('panel-views').innerHTML=`<h3>推荐视图与流程规则</h3><div class="table-wrap"><table><thead><tr><th>视图</th><th>设置建议</th></tr></thead><tbody><tr><td>任务看板</td><td>任务主表按“状态”分组；展示任务、执行人、交付时间、下次检查时间和优先级。</td></tr><tr><td>未完任务</td><td>状态不是“已验收”且不是“已取消”。</td></tr><tr><td>今日检查</td><td>下次检查时间早于或等于今天，且状态不是关闭状态。</td></tr><tr><td>待核验</td><td>状态等于“待核验”。将验收清单按关联任务过滤或分组查看。</td></tr><tr><td>逾期</td><td>当前批准交付早于现在，且任务不是已验收或已取消。</td></tr><tr><td>退回待补</td><td>状态等于“退回待补”；展示缺项、执行人和下次检查时间。</td></tr><tr><td>事件时间线</td><td>事件流水按发生时间倒序；按关联任务过滤查历史。</td></tr></tbody></table></div><div class="section"><h3>导入后手动设置的单选选项</h3><p><b>任务状态：</b>待接单、执行中、待回收、待核验、退回待补、已验收、已取消</p><p><b>优先级：</b>高、中、低</p><p><b>验收结果：</b>未核验、通过、未通过</p><p><b>事件类型：</b>接单、检查、续期、升级、收到成果、核验、退回、已验收、已取消、目标变更</p><p class="small">提示：视图过滤器、关联字段和公式需要在飞书中自行配置；具体菜单名称可能随飞书版本变化。</p></div>`;
+function csvFor(key){const t=tables[key];const rows=[t.fields.map(f=>f[0]),t.sample];return '\ufeff'+rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n')+'\r\n'}
+function download(key){const t=tables[key],blob=new Blob([csvFor(key)],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=t.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
+async function copyHeaders(key){const text=tables[key].fields.map(f=>f[0]).join('\t');try{await navigator.clipboard.writeText(text);toast('表头已复制，可粘贴到飞书表格。')}catch{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('表头已复制。')}}
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>{x.classList.toggle('active',x===btn);x.setAttribute('aria-selected',x===btn?'true':'false')});document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+btn.dataset.tab))}));
+document.addEventListener('click',e=>{const d=e.target.closest('[data-download]');if(d)download(d.dataset.download);const c=e.target.closest('[data-copy]');if(c)copyHeaders(c.dataset.copy)});
+document.getElementById('downloadAll').addEventListener('click',()=>{['tasks','events','checks'].forEach((key,i)=>setTimeout(()=>download(key),i*350));toast('正在下载三张表的 CSV 模板。')});
+</script>
+</body>
+</html>
