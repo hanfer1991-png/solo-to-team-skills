@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>项目任务看板 · Solo to Team</title>
+<style>
+:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f4f6fb;--blue:#315efb;--line:#e4e8f0;--muted:#697386;--green:#14804a;--red:#c03636}*{box-sizing:border-box}body{margin:0}button,input,textarea,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 11px;color:#243047}button:hover{border-color:#9aa8c3;background:#f8faff}.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.primary:hover{background:#244ddd;color:#fff}.danger{color:var(--red)}header{background:#fff;border-bottom:1px solid var(--line);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}h1{font-size:20px;margin:0}header p{margin:5px 0 0;color:var(--muted);font-size:13px}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.toolbar input{min-width:220px}.notice{margin:16px 24px 0;padding:10px 13px;border:1px solid #f1d899;background:#fff9e9;border-radius:9px;color:#70530a;font-size:13px}.board{display:grid;grid-template-columns:repeat(5,minmax(230px,1fr));gap:14px;padding:18px 24px 28px;overflow-x:auto;align-items:start}.column{background:#e9edf5;border-radius:12px;padding:11px;min-height:220px}.col-head{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 10px;font-weight:650;font-size:14px}.count{background:#fff;border-radius:20px;padding:2px 8px;color:var(--muted);font-size:12px}.cards{display:grid;gap:10px}.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;box-shadow:0 1px 2px #1720330b}.card h3{margin:0 0 7px;font-size:14px;line-height:1.4}.meta{font-size:12px;color:var(--muted);display:grid;gap:5px}.meta strong{color:#334155;font-weight:550}.pill{display:inline-block;border-radius:20px;background:#eef2ff;color:#344cc4;font-size:11px;padding:3px 8px;margin:0 4px 6px 0}.pill.overdue{background:#fff0ee;color:#b32828}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}.actions button{font-size:12px;padding:6px 8px}.empty{font-size:12px;color:#8690a2;text-align:center;padding:20px 6px}.footer{padding:0 24px 24px;color:var(--muted);font-size:12px}.archive{padding:0 24px 20px}.archive summary{cursor:pointer;color:#4a566b;font-weight:600}.archive-list{display:flex;gap:10px;overflow:auto;padding-top:12px}.archive-list .card{min-width:240px;max-width:320px;flex:1}.modal{position:fixed;inset:0;background:#11182777;display:none;align-items:center;justify-content:center;padding:16px;z-index:5}.modal.open{display:flex}.dialog{background:white;border-radius:14px;width:min(760px,100%);max-height:92vh;overflow:auto;padding:20px;box-shadow:0 18px 60px #10182844}.dialog h2{margin:0 0 16px;font-size:19px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:5px;font-size:12px;color:#526078}.field.full{grid-column:1/-1}.field input,.field textarea,.field select{width:100%;border:1px solid #cfd6e2;border-radius:7px;padding:9px;color:#1f2937;background:white}.field textarea{min-height:70px;resize:vertical}.help{font-size:11px;color:#7a8495}.modal-actions{display:flex;justify-content:space-between;gap:8px;margin-top:17px;flex-wrap:wrap}.right-actions{display:flex;gap:8px}.checklist{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}.check-row{display:grid;grid-template-columns:minmax(150px,1fr) 120px minmax(150px,1fr);gap:8px;align-items:center;margin:8px 0}.check-row input,.check-row select{padding:7px;border:1px solid #cfd6e2;border-radius:6px;min-width:0}.events{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}.events h3{font-size:14px}.event{border-left:2px solid #c8d3f7;padding:2px 0 8px 10px;margin:8px 0;font-size:12px;color:#4c5870}.event time{color:#8992a2}.hide{display:none!important}@media(max-width:700px){header{padding:14px}.board{padding:14px;grid-template-columns:repeat(5,270px)}.notice,.archive,.footer{margin-left:14px;margin-right:14px;padding-left:10px;padding-right:10px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.check-row{grid-template-columns:1fr}.toolbar input{min-width:150px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>项目任务看板</h1><p>派工 → 接单 → 收成果 → 核证 → 人工验收</p></div>
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="搜索任务、项目、执行人…" aria-label="搜索任务">
+    <button class="primary" id="newTask">＋ 新建任务</button>
+    <button id="exportData">导出 JSON</button>
+    <button id="importData">导入 JSON</button>
+    <input id="fileInput" class="hide" type="file" accept="application/json">
+  </div>
+</header>
+<div class="notice"><strong>本地模板：</strong>数据仅保存在当前浏览器的 localStorage，不会上传或跨设备同步。此页面不含自动提醒、定时检查或自动派工；到点检查由负责人执行。只有负责人确认验收后任务才关闭。</div>
+<main class="board" id="board" aria-live="polite"></main>
+<details class="archive" id="archive"><summary>已关闭任务（已验收 / 已取消）</summary><div class="archive-list" id="archiveList"></div></details>
+<div class="footer">提示：开始使用前请导出备份。请勿在本地看板存放密码、密钥或敏感个人信息。</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+  <div class="dialog"><h2 id="dialogTitle">新建任务</h2><form id="taskForm">
+    <input type="hidden" id="taskId">
+    <div class="form-grid">
+      <label class="field">任务名称<input id="title" required maxlength="160" placeholder="例如：整理访谈纪要"></label>
+      <label class="field">项目<input id="project" maxlength="100" placeholder="项目名称或 ID"></label>
+      <label class="field">执行人<input id="assignee" maxlength="100" placeholder="负责完成工作的人 / 助手"></label>
+      <label class="field">收件人 / 核验人<input id="reviewer" maxlength="100" placeholder="负责接收、核验的人"></label>
+      <label class="field">预计交付时间<input id="due" type="datetime-local"></label>
+      <label class="field">下次检查时间<input id="checkAt" type="datetime-local"></label>
+      <label class="field full">目标<textarea id="goal" maxlength="1200" placeholder="要做什么、结果是什么"></textarea></label>
+      <label class="field full">交付位置<input id="deliverable" maxlength="500" placeholder="文件路径或链接"></label>
+      <label class="field">成果版本<input id="version" maxlength="40" value="v1"></label>
+      <label class="field">阻塞 / 风险<input id="blocker" maxlength="300" placeholder="无则留空"></label>
+      <label class="field full">验收标准（每行一条）<textarea id="criteria" required placeholder="决定与行动项分节\n行动项含负责人和日期\n不添加来源未提及的信息"></textarea><span class="help">每条标准将在验收时逐项记录结果及证据。</span></label>
+    </div>
+    <div id="reviewSection" class="checklist hide"></div>
+    <div id="eventSection" class="events hide"></div>
+    <div class="modal-actions"><div id="leftActions"></div><div class="right-actions"><button type="button" id="closeModal">关闭</button><button type="submit" class="primary">保存任务</button></div></div>
+  </form></div>
+</div>
+<script>
+(()=>{
+'use strict';
+const KEY='solo-to-team-project-kanban-v1';
+const ACTIVE=['待接单','执行中','待回收','待核验','退回待补'];
+let tasks=[];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const now=()=>new Date().toISOString();
+const fmt=v=>{if(!v)return '未设置';const d=new Date(v);return Number.isNaN(+d)?v:d.toLocaleString('zh-CN',{hour12:false});};
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'[]');tasks=Array.isArray(d)?d:[]}catch{tasks=[]}}
+function save(){localStorage.setItem(KEY,JSON.stringify(tasks));render()}
+function addEvent(t,type,details,actor='项目负责人'){t.events=t.events||[];t.events.unshift({at:now(),type,details,actor})}
+function isClosed(t){return t.status==='已验收'||t.status==='已取消'}
+function overdue(t){return !isClosed(t)&&t.due&&new Date(t.due)<new Date()}
+function matches(t,q){return !q||[t.id,t.title,t.project,t.assignee,t.reviewer,t.status,t.deliverable].join(' ').toLowerCase().includes(q)}
+function renderCard(t){
+ const over=overdue(t);let buttons=`<button data-action="edit" data-id="${esc(t.id)}">详情 / 编辑</button>`;
+ if(t.status==='待接单')buttons+=`<button data-action="accept" data-id="${esc(t.id)}">确认接单</button>`;
+ if(t.status==='执行中')buttons+=`<button data-action="check" data-id="${esc(t.id)}">记录检查</button><button data-action="waiting" data-id="${esc(t.id)}">进入待回收</button>`;
+ if(t.status==='待回收')buttons+=`<button data-action="receive" data-id="${esc(t.id)}">收到成果</button>`;
+ if(t.status==='退回待补')buttons+=`<button data-action="receive" data-id="${esc(t.id)}">补交成果</button>`;
+ if(t.status==='待核验')buttons+=`<button class="primary" data-action="verify" data-id="${esc(t.id)}">核验 / 决定</button>`;
+ const progress=(t.criteria||[]).filter(c=>c.result==='通过').length;
+ return `<article class="card"><span class="pill">${esc(t.project||'未归属项目')}</span>${over?'<span class="pill overdue">逾期</span>':''}<h3>${esc(t.title)}</h3><div class="meta"><div>ID：<strong>${esc(t.id)}</strong></div><div>执行：<strong>${esc(t.assignee||'待分配')}</strong>　收件：<strong>${esc(t.reviewer||'未指定')}</strong></div><div>交付：<strong>${esc(fmt(t.due))}</strong></div><div>下次检查：<strong>${esc(fmt(t.checkAt))}</strong></div>${t.deliverable?`<div>成果：<strong>${esc(t.deliverable)}</strong> (${esc(t.version||'未标版本')})</div>`:''}${t.status==='待核验'?`<div>核验：<strong>${progress}/${(t.criteria||[]).length} 项通过</strong></div>`:''}${t.blocker?`<div>阻塞：<strong>${esc(t.blocker)}</strong></div>`:''}</div><div class="actions">${buttons}</div></article>`;
+}
+function render(){const q=$('search').value.trim().toLowerCase();$('board').innerHTML=ACTIVE.map(s=>{const list=tasks.filter(t=>t.status===s&&matches(t,q));return `<section class="column"><div class="col-head"><span>${s}</span><span class="count">${list.length}</span></div><div class="cards">${list.length?list.map(renderCard).join(''):'<div class="empty">暂无任务</div>'}</div></section>`}).join('');const closed=tasks.filter(t=>isClosed(t)&&matches(t,q));$('archiveList').innerHTML=closed.length?closed.map(renderCard).join(''):'<div class="empty">暂无已关闭任务</div>'}
+function openModal(t=null){$('taskForm').reset();$('taskId').value=t?.id||'';$('dialogTitle').textContent=t?(t.status==='待核验'?'核验任务':'任务详情 / 编辑'):'新建任务';$('title').value=t?.title||'';$('project').value=t?.project||'';$('assignee').value=t?.assignee||'';$('reviewer').value=t?.reviewer||'';$('due').value=t?.due||'';$('checkAt').value=t?.checkAt||'';$('goal').value=t?.goal||'';$('deliverable').value=t?.deliverable||'';$('version').value=t?.version||'v1';$('blocker').value=t?.blocker||'';$('criteria').value=(t?.criteria||[]).map(c=>c.text).join('\n');
+ const rev=$('reviewSection'), ev=$('eventSection'), left=$('leftActions');rev.classList.toggle('hide',!t||t.status!=='待核验');ev.classList.toggle('hide',!t);left.innerHTML='';
+ if(t){
+   if(t.status==='待核验'){rev.innerHTML='<strong>逐项核验证据</strong>'+ (t.criteria||[]).map((c,i)=>`<div class="check-row"><input aria-label="验收标准" value="${esc(c.text)}" readonly><select data-result="${i}"><option ${c.result==='未核验'?'selected':''}>未核验</option><option ${c.result==='通过'?'selected':''}>通过</option><option ${c.result==='未通过'?'selected':''}>未通过</option></select><input data-evidence="${i}" placeholder="证据位置 / 核验说明" value="${esc(c.evidence||'')}"></div>`).join('')+'<span class="help">“通过”必须填写可定位的证据或核验说明；核验对应当前成果版本。</span>';}
+   ev.innerHTML='<h3>任务事件（最新在前）</h3>'+((t.events||[]).length?(t.events||[]).map(e=>`<div class="event"><strong>${esc(e.type)}</strong> · ${esc(e.actor||'')}<br>${esc(e.details||'')}<br><time>${esc(fmt(e.at))}</time></div>`).join(''):'<div class="help">暂无事件</div>');
+   if(!isClosed(t))left.innerHTML=`<button type="button" class="danger" data-action="cancel" data-id="${esc(t.id)}">取消任务</button>`;
+ }
+ $('modal').classList.add('open');$('modal').dataset.mode=t?'edit':'new';$('modal').dataset.originalStatus=t?.status||'';$('modal').dataset.originalVersion=t?.version||'';
+}
+function closeModal(){$('modal').classList.remove('open')}
+function getTask(id){return tasks.find(t=>t.id===id)}
+function handleAction(action,id){const t=getTask(id);if(!t)return;
+ if(action==='edit'){openModal(t);return}
+ if(action==='accept'){t.status='执行中';addEvent(t,'已接单',`${t.assignee||'执行人'}确认接单；成果尚未收到。`);save();return}
+ if(action==='check'){const note=prompt('记录实际检查情况（未实际看到成果时不要标记收到）：');if(note!==null){addEvent(t,'检查',note||'负责人完成检查，暂无新增情况。');save()}return}
+ if(action==='waiting'){t.status='待回收';addEvent(t,'进入待回收','负责人确认进入成果回收阶段。');save();return}
+ if(action==='receive'){const loc=prompt('请填写实际确认的成果位置：',t.deliverable||'');if(loc===null||!loc.trim())return;const ver=prompt('成果版本（如 v1、v2）：',t.version||'v1');if(ver===null||!ver.trim())return;t.deliverable=loc.trim();t.version=ver.trim();t.status='待核验';(t.criteria||[]).forEach(c=>{if(c.result!=='通过'){c.result='未核验';c.evidence=''}});addEvent(t,'已收到成果',`已实际确认交付物：${t.deliverable}；版本 ${t.version}。待逐项核验。`);save();return}
+ if(action==='verify'){openModal(t);return}
+ if(action==='cancel'){const reason=prompt('取消原因（必填；请确认你有权限取消）：');if(!reason||!reason.trim())return;if(!confirm('确认记录为“已取消”？此操作将关闭任务，但不代表任务验收通过。'))return;t.status='已取消';t.closeReason=reason.trim();t.closedAt=now();addEvent(t,'已取消',`负责人决定取消：${reason.trim()}`);save();closeModal();return}
+}
+$('newTask').onclick=()=>openModal();$('closeModal').onclick=closeModal;$('search').oninput=render;
+$('board').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(b)handleAction(b.dataset.action,b.dataset.id)});
+$('archiveList').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(b)handleAction(b.dataset.action,b.dataset.id)});
+$('taskForm').addEventListener('submit',e=>{e.preventDefault();const id=$('taskId').value;const old=id?getTask(id):null;const title=$('title').value.trim();const criteriaText=$('criteria').value.split('\n').map(s=>s.trim()).filter(Boolean);if(!criteriaText.length){alert('至少填写一条验收标准。');return}
+ let criteria=criteriaText.map((text,i)=>{const prev=old?.criteria?.find(c=>c.text===text);return prev?{...prev}:{text,result:'未核验',evidence:''}});
+ if(old&&old.status==='待核验'){$$('select[data-result]').forEach((el,i)=>{if(criteria[i])criteria[i].result=el.value});$$('input[data-evidence]').forEach((el,i)=>{if(criteria[i])criteria[i].evidence=el.value.trim()});if(old.version!==$('version').value.trim()){criteria=criteria.map(c=>({text:c.text,result:'未核验',evidence:''}))}}
+ const obj={...(old||{}),id:id||`T-${Date.now().toString(36).toUpperCase()}`,title,project:$('project').value.trim(),assignee:$('assignee').value.trim(),reviewer:$('reviewer').value.trim(),due:$('due').value,checkAt:$('checkAt').value,goal:$('goal').value.trim(),deliverable:$('deliverable').value.trim(),version:$('version').value.trim()||'v1',blocker:$('blocker').value.trim(),criteria,status:old?.status||'待接单',events:old?.events||[],createdAt:old?.createdAt||now(),updatedAt:now()};
+ if(old){Object.assign(old,obj);addEvent(old,'任务更新','任务信息或验收标准已更新。');}else{obj.status='待接单';addEvent(obj,'待接单','任务已登记；派工前已明确交付位置、验收标准及检查时间。');tasks.unshift(obj)}
+ if(old&&old.status==='待核验'){
+   const all=old.criteria.length>0&&old.criteria.every(c=>c.result==='通过'&&c.evidence);
+   if(all){if(confirm('所有验收项均已通过且有证据。确认由收件人作出最终人工验收？')){old.status='已验收';old.closedAt=now();addEvent(old,'已验收',`收件人 ${old.reviewer||'未指定'} 确认验收；证据对应成果版本 ${old.version}。`)}else{addEvent(old,'核验记录','已保存逐项核验记录；等待人工最终决定。')}}
+   else if(old.criteria.some(c=>c.result==='未通过')){const reason=prompt('存在未通过项，请写明退回原因：');if(reason&&reason.trim()){old.status='退回待补';addEvent(old,'退回',reason.trim())}else addEvent(old,'核验记录','已保存核验结果；未通过项待负责人决定退回。')}
+   else addEvent(old,'核验记录','核验记录已保存；尚未全部通过，任务保持待核验。');
+ }
+ save();closeModal();
+});
+function $$(sel){return $('taskForm').querySelectorAll(sel)}
+$('exportData').onclick=()=>{const blob=new Blob([JSON.stringify({format:'solo-to-team-kanban-v1',exportedAt:now(),tasks},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`project-kanban-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href)};
+$('importData').onclick=()=> $('fileInput').click();$('fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());const imported=Array.isArray(d)?d:d.tasks;if(!Array.isArray(imported))throw Error('文件中没有任务数组');if(!confirm(`导入 ${imported.length} 条任务？将替换当前浏览器中的全部看板数据。建议先导出备份。`))return;tasks=imported;save();}catch(err){alert('导入失败：'+err.message)}finally{e.target.value=''}};
+$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+load();render();
+})();
+</script>
+</body>
+</html>
